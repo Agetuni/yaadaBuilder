@@ -119,6 +119,8 @@ export const en: typeof zh = {
     sessions: "Sessions",
     openSource: "Source Code",
     settings: "Settings",
+    profile: "Profile",
+    signOut: "Sign out",
   },
   warning: {
     title: "AI Model Configuration Required",

@@ -80,6 +80,8 @@ interface ChatInputProps {
   attachments: Attachment[];
   onAttachmentsChange: (attachments: Attachment[]) => void;
   onSlashCommand: (cmd: string) => void;
+  /** Bump to focus the textarea (e.g. after picking a suggestion) */
+  focusKey?: number;
 }
 
 export function ChatInput({
@@ -92,6 +94,7 @@ export function ChatInput({
   attachments,
   onAttachmentsChange,
   onSlashCommand,
+  focusKey = 0,
 }: ChatInputProps) {
   const t = useT();
   const [isHoveringStop, setIsHoveringStop] = useState(false);
@@ -169,6 +172,19 @@ export function ChatInput({
       textareaRef.current.style.height = "auto";
     }
   }, [input]);
+
+  // Focus + resize when a suggestion is pasted into the input
+  useEffect(() => {
+    if (!focusKey) return;
+    const el = textareaRef.current;
+    if (!el) return;
+    el.focus();
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 200) + "px";
+    // Place caret at end
+    const len = el.value.length;
+    el.setSelectionRange(len, len);
+  }, [focusKey]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (showSlashMenu) {

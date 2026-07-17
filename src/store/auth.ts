@@ -45,17 +45,10 @@ async function hydrateFromCloud(userId: string, profile: BuilderProfile) {
     fetchMemories(userId),
   ]);
 
-  const ids = Object.keys(conversations);
-  let activeId: string | null = null;
-  if (ids.length > 0) {
-    activeId = ids
-      .map((id) => conversations[id])
-      .sort((a, b) => b.updatedAt - a.updatedAt)[0].id;
-  }
-
+  // Load history but never restore the last project — App always opens blank
   useConversationStore.setState({
     conversations,
-    activeId,
+    activeId: null,
     _hasHydrated: true,
   });
   useMemoryStore.setState({

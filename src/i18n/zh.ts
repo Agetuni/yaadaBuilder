@@ -101,6 +101,8 @@ export const zh = {
     sessions: "会话列表",
     openSource: "开源代码",
     settings: "设置",
+    profile: "个人资料",
+    signOut: "退出登录",
   },
   warning: {
     title: "需要配置 AI 模型",

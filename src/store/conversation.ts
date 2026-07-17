@@ -270,9 +270,11 @@ export const useConversationStore = create<ConversationState>()(
     {
       name: "yaada-builder-conversations",
       storage: createJSONStorage(() => localforageStorage),
+      // Cloud: auth hydrate is source of truth — never apply IndexedDB over it
+      skipHydration: isCloudEnabled(),
       partialize: (state) => ({
+        // Persist history only; never restore last active session on open
         conversations: state.conversations,
-        activeId: state.activeId,
       }),
       onRehydrateStorage: () => (state) => {
         // Cloud mode: discard local cache; auth hydrate is source of truth
@@ -298,7 +300,8 @@ export const useConversationStore = create<ConversationState>()(
             useConversationStore.setState({ conversations: { ...convs } });
           }
         }
-        useConversationStore.setState({ _hasHydrated: true });
+        // Always land on a blank session (App creates one after hydrate)
+        useConversationStore.setState({ activeId: null, _hasHydrated: true });
       },
     },
   ),

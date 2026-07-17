@@ -32,6 +32,7 @@ export function EmptyState({ onSelectSuggestion }: EmptyStateProps) {
         {suggestions.map(({ icon, text }) => (
           <Button
             key={text}
+            type="button"
             variant="outline"
             className="w-full justify-start h-auto py-2.5 text-left rounded-xl border-border bg-card hover:bg-accent"
             onClick={() => onSelectSuggestion(text)}

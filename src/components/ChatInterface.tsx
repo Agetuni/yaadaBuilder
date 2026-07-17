@@ -96,6 +96,7 @@ export function ChatInterface({
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [showSessionList, setShowSessionList] = useState(false);
+  const [suggestionFocusKey, setSuggestionFocusKey] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mergedMessages = useMergedMessages(messages);
   const isMobile = useIsMobile();
@@ -201,6 +202,11 @@ export function ChatInterface({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleSelectSuggestion = useCallback((text: string) => {
+    setInput(text);
+    setSuggestionFocusKey((k) => k + 1);
+  }, []);
+
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if ((!input.trim() && attachments.length === 0) || isGenerating) return;
@@ -260,7 +266,7 @@ export function ChatInterface({
         )}
 
         {messages.length === 0 && hasValidSettings && (
-          <EmptyState onSelectSuggestion={setInput} />
+          <EmptyState onSelectSuggestion={handleSelectSuggestion} />
         )}
 
         {mergedMessages.map((msg, mi) => {
@@ -355,6 +361,7 @@ export function ChatInterface({
         attachments={attachments}
         onAttachmentsChange={setAttachments}
         onSlashCommand={handleSlashCommand}
+        focusKey={suggestionFocusKey}
       />
 
       {/* Diff modal */}

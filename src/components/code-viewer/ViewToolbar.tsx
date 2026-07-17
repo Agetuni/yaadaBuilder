@@ -28,6 +28,7 @@ import { saveAs } from "file-saver";
 import { useT } from "../../i18n";
 import { useAuthStore } from "../../store/auth";
 import { isCloudEnabled } from "../../lib/supabase";
+import { UserProfileMenu } from "../UserProfileMenu";
 import {
   fetchPublishedForConversation,
   isValidUuid,
@@ -275,6 +276,8 @@ export function ViewToolbar({
             <Download size={16} />
           </Button>
         )}
+
+        <UserProfileMenu />
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

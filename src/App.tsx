@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -8,6 +8,7 @@ import { ChatInterface } from "./components/ChatInterface";
 import { CodeViewer } from "./components/CodeViewer";
 import { SettingsDialog } from "./components/SettingsDialog";
 import { LoginPage } from "./components/LoginPage";
+import { UserProfileMenu } from "./components/UserProfileMenu";
 import { useAppState } from "./hooks/useAppState";
 import { useGenerator } from "./hooks/useGenerator";
 import { useIsMobile } from "./hooks/useIsMobile";
@@ -27,7 +28,7 @@ export default function App() {
   const hasHydrated = useConversationStore((s) => s._hasHydrated);
   const conversations = useConversationStore((s) => s.conversations);
   const createConversation = useConversationStore((s) => s.createConversation);
-  const switchConversation = useConversationStore((s) => s.switchConversation);
+  const [openedFresh, setOpenedFresh] = useState(false);
   const isMobile = useIsMobile();
   useTheme();
 
@@ -35,20 +36,22 @@ export default function App() {
     void initAuth();
   }, [initAuth]);
 
-  // On hydration: ensure there's an active conversation (skip until signed in when cloud)
+  // Always open on a brand-new blank conversation (history stays in the sidebar)
   useEffect(() => {
+    if (!authReady) return;
     if (cloudEnabled && !session) return;
     if (!hasHydrated) return;
-    if (!activeId || !conversations[activeId]) {
-      const entries = Object.values(conversations);
-      if (entries.length > 0) {
-        const latest = entries.sort((a, b) => b.updatedAt - a.updatedAt)[0];
-        switchConversation(latest.id);
-      } else {
-        createConversation();
-      }
-    }
-  }, [hasHydrated, cloudEnabled, session]);
+    if (openedFresh) return;
+    createConversation();
+    setOpenedFresh(true);
+  }, [
+    authReady,
+    hasHydrated,
+    cloudEnabled,
+    session,
+    openedFresh,
+    createConversation,
+  ]);
 
   const {
     files,
@@ -119,7 +122,7 @@ export default function App() {
     return <LoginPage />;
   }
 
-  if (!hasHydrated) {
+  if (!hasHydrated || !openedFresh) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-background">
         <p className="text-sm text-muted-foreground">{t.app.loading}</p>
@@ -179,15 +182,26 @@ export default function App() {
                 isProjectInitialized={isProjectInitialized}
               />
             ) : (
-              <div className="flex w-full h-full min-w-0 items-center justify-center bg-muted/30">
-                <div className="text-center max-w-md px-6">
-                  <div className="text-5xl mb-6">🚀</div>
-                  <h2 className="text-xl font-semibold text-foreground mb-2">
-                    {t.app.startBuilding}
-                  </h2>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {t.app.startBuildingDesc}
-                  </p>
+              <div className="flex w-full h-full min-w-0 flex-col bg-muted/30">
+                <div className="h-14 px-3 border-b bg-background flex items-center justify-end shrink-0">
+                  <UserProfileMenu />
+                </div>
+                <div className="flex flex-1 items-center justify-center">
+                  <div className="text-center max-w-md px-6">
+                    <div className="mb-6 flex justify-center">
+                      <img
+                        className="h-16 w-16 rounded-2xl"
+                        src="/logo.png"
+                        alt="Yaada Builder"
+                      />
+                    </div>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">
+                      {t.app.startBuilding}
+                    </h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {t.app.startBuildingDesc}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

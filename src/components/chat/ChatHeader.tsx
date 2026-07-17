@@ -1,7 +1,6 @@
-import { PanelLeftOpen, LogOut } from "lucide-react";
+import { PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConversationStore, DEFAULT_TITLE } from "../../store/conversation";
-import { useAuthStore } from "../../store/auth";
 import { useT } from "../../i18n";
 
 interface ChatHeaderProps {
@@ -11,9 +10,6 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ onToggleSessionList }: ChatHeaderProps) {
   const t = useT();
-  const cloudEnabled = useAuthStore((s) => s.cloudEnabled);
-  const user = useAuthStore((s) => s.user);
-  const signOut = useAuthStore((s) => s.signOut);
   const rawTitle = useConversationStore((s) =>
     s.activeId ? (s.conversations[s.activeId]?.title ?? null) : null,
   );
@@ -22,31 +18,29 @@ export function ChatHeader({ onToggleSessionList }: ChatHeaderProps) {
 
   return (
     <div className="h-14 px-3 border-b bg-background flex items-center justify-between shrink-0">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onToggleSessionList}
-        title={t.header.sessions}
-        className="h-8 w-8 shrink-0"
-      >
-        <PanelLeftOpen size={18} />
-      </Button>
+      <div className="flex items-center gap-2 min-w-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleSessionList}
+          title={t.header.sessions}
+          className="h-8 w-8 shrink-0"
+        >
+          <PanelLeftOpen size={18} />
+        </Button>
+        <img
+          className="h-7 w-7 rounded-md shrink-0"
+          src="/logo.png"
+          alt=""
+        />
+        <span className="font-display text-sm font-semibold tracking-tight truncate">
+          Yaada <span className="text-primary">Builder</span>
+        </span>
+      </div>
       <span className="text-sm font-medium truncate px-2 flex-1 text-center">
         {title}
       </span>
-      <div className="flex items-center w-8 justify-end">
-        {cloudEnabled && user && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => void signOut()}
-            title={user.email ?? "Sign out"}
-            className="h-8 w-8 shrink-0"
-          >
-            <LogOut size={18} />
-          </Button>
-        )}
-      </div>
+      <div className="w-8 shrink-0" aria-hidden />
     </div>
   );
 }

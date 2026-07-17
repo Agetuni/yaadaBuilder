@@ -47,6 +47,19 @@ export interface BuilderMemoryRow {
   updated_at: string;
 }
 
+export interface BuilderPublishedSiteRow {
+  id: string;
+  slug: string;
+  user_id: string;
+  client_id: string;
+  conversation_id: string;
+  title: string;
+  template: string;
+  files: unknown;
+  created_at: string;
+  updated_at: string;
+}
+
 const API_TYPES: ApiType[] = [
   "openai-compatible",
   "openai",

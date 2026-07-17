@@ -28,6 +28,9 @@ interface CodeViewerProps {
   onMoveFile: (sourcePath: string, targetFolder: string) => void;
   template: string;
   sandpackKey: number;
+  conversationId: string | null;
+  title: string;
+  isProjectInitialized: boolean;
 }
 
 export function CodeViewer({
@@ -40,6 +43,9 @@ export function CodeViewer({
   onMoveFile,
   template,
   sandpackKey,
+  conversationId,
+  title,
+  isProjectInitialized,
 }: CodeViewerProps) {
   const t = useT();
   const [viewMode, setViewMode] = useState<ViewMode>("preview");
@@ -80,6 +86,10 @@ export function CodeViewer({
         deviceSize={deviceSize}
         onDeviceSizeChange={setDeviceSize}
         files={files}
+        conversationId={conversationId}
+        title={title}
+        template={template}
+        isProjectInitialized={isProjectInitialized}
       />
 
       <div className="flex-1 overflow-hidden relative bg-muted/50">

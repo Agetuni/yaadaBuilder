@@ -170,6 +170,13 @@ export default function App() {
                 onMoveFile={moveFile}
                 template={template}
                 sandpackKey={sandpackKey}
+                conversationId={activeId}
+                title={
+                  activeId && conversations[activeId]
+                    ? conversations[activeId].title
+                    : ""
+                }
+                isProjectInitialized={isProjectInitialized}
               />
             ) : (
               <div className="flex w-full h-full min-w-0 items-center justify-center bg-muted/30">

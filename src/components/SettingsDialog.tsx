@@ -52,6 +52,7 @@ import {
 import type { ApiType } from "@/lib/ai-provider";
 import { version } from "../../package.json";
 import { useT } from "../i18n";
+import { useAuthStore } from "../store/auth";
 
 const API_ENDPOINTS: Record<ApiType, string> = {
   "openai-compatible": "/chat/completions",
@@ -86,6 +87,7 @@ export function SettingsDialog({
   onSaveSystem,
 }: SettingsDialogProps) {
   const t = useT();
+  const settingsManagedByAdmin = useAuthStore((s) => s.settingsManagedByAdmin);
   const [formData, setFormData] = useState<AISettings>(settings);
   const [webSearchForm, setWebSearchForm] =
     useState<WebSearchSettings>(webSearchSettings);
@@ -110,6 +112,12 @@ export function SettingsDialog({
   }, [systemSettings]);
 
   const handleSave = () => {
+    if (settingsManagedByAdmin) {
+      // Theme/language may still be useful locally — only persist system prefs
+      onSaveSystem(systemForm);
+      onClose();
+      return;
+    }
     onSave(formData);
     onSaveWebSearch(webSearchForm);
     onSaveAssetSearch(assetSearchForm);
@@ -124,6 +132,13 @@ export function SettingsDialog({
           <DialogTitle>{t.settings.title}</DialogTitle>
         </DialogHeader>
 
+        {settingsManagedByAdmin && (
+          <p className="mx-2 mb-2 rounded-md border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+            AI and search settings are managed by your TinyHustle admin. You can
+            still change language and theme below.
+          </p>
+        )}
+
         <Tabs
           defaultValue="model"
           className="flex-1 min-h-0 flex flex-col px-2"
@@ -137,24 +152,30 @@ export function SettingsDialog({
 
           {/* ── 模型设置 ── */}
           <TabsContent value="model" className="py-4 space-y-4">
-            <ModelSettingsTab formData={formData} setFormData={setFormData} />
+            <fieldset disabled={settingsManagedByAdmin} className="space-y-4 disabled:opacity-70">
+              <ModelSettingsTab formData={formData} setFormData={setFormData} />
+            </fieldset>
           </TabsContent>
 
           {/* ── 联网搜索 ── */}
           <TabsContent value="search" className="py-4 space-y-4">
-            <WebSearchTab
-              form={webSearchForm}
-              setForm={setWebSearchForm}
-              apiType={formData.apiType}
-            />
+            <fieldset disabled={settingsManagedByAdmin} className="space-y-4 disabled:opacity-70">
+              <WebSearchTab
+                form={webSearchForm}
+                setForm={setWebSearchForm}
+                apiType={formData.apiType}
+              />
+            </fieldset>
           </TabsContent>
 
           {/* ── 素材搜索 ── */}
           <TabsContent value="asset" className="py-4 space-y-4">
-            <AssetSearchTab
-              form={assetSearchForm}
-              setForm={setAssetSearchForm}
-            />
+            <fieldset disabled={settingsManagedByAdmin} className="space-y-4 disabled:opacity-70">
+              <AssetSearchTab
+                form={assetSearchForm}
+                setForm={setAssetSearchForm}
+              />
+            </fieldset>
           </TabsContent>
 
           {/* ── 系统设置 ── */}

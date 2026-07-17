@@ -2443,7 +2443,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "open-builder"
+name = "yaada-builder"
 version = "1.3.0"
 dependencies = [
  "futures-util",

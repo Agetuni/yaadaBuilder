@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import localforage from "localforage";
 import { useSnapshotStore } from "./snapshot";
+import { isCloudEnabled } from "../lib/supabase";
 import type { Conversation, CompressedContext, Message, ProjectFiles } from "../types";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
@@ -267,13 +268,22 @@ export const useConversationStore = create<ConversationState>()(
       },
     }),
     {
-      name: "open-builder-conversations",
+      name: "yaada-builder-conversations",
       storage: createJSONStorage(() => localforageStorage),
       partialize: (state) => ({
         conversations: state.conversations,
         activeId: state.activeId,
       }),
       onRehydrateStorage: () => (state) => {
+        // Cloud mode: discard local cache; auth hydrate is source of truth
+        if (isCloudEnabled()) {
+          useConversationStore.setState({
+            conversations: {},
+            activeId: null,
+            _hasHydrated: false,
+          });
+          return;
+        }
         if (state) {
           // Migrate old hardcoded default titles to sentinel value
           const convs = state.conversations;

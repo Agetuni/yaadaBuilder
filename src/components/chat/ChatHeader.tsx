@@ -1,19 +1,19 @@
-import { PanelLeftOpen, Settings, Github } from "lucide-react";
+import { PanelLeftOpen, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConversationStore, DEFAULT_TITLE } from "../../store/conversation";
+import { useAuthStore } from "../../store/auth";
 import { useT } from "../../i18n";
 
 interface ChatHeaderProps {
   isGenerating: boolean;
-  onOpenSettings: () => void;
   onToggleSessionList: () => void;
 }
 
-export function ChatHeader({
-  onOpenSettings,
-  onToggleSessionList,
-}: ChatHeaderProps) {
+export function ChatHeader({ onToggleSessionList }: ChatHeaderProps) {
   const t = useT();
+  const cloudEnabled = useAuthStore((s) => s.cloudEnabled);
+  const user = useAuthStore((s) => s.user);
+  const signOut = useAuthStore((s) => s.signOut);
   const rawTitle = useConversationStore((s) =>
     s.activeId ? (s.conversations[s.activeId]?.title ?? null) : null,
   );
@@ -34,26 +34,18 @@ export function ChatHeader({
       <span className="text-sm font-medium truncate px-2 flex-1 text-center">
         {title}
       </span>
-      <div>
-        <a href="https://github.com/Amery2010/open-builder" target="_blank">
+      <div className="flex items-center w-8 justify-end">
+        {cloudEnabled && user && (
           <Button
             variant="ghost"
             size="icon"
-            title={t.header.openSource}
+            onClick={() => void signOut()}
+            title={user.email ?? "Sign out"}
             className="h-8 w-8 shrink-0"
           >
-            <Github size={18} />
+            <LogOut size={18} />
           </Button>
-        </a>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onOpenSettings}
-          title={t.header.settings}
-          className="h-8 w-8 shrink-0"
-        >
-          <Settings size={18} />
-        </Button>
+        )}
       </div>
     </div>
   );

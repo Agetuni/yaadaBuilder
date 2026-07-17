@@ -89,7 +89,7 @@ export const useSettingsStore = create<SettingsState>()(
       },
       system: {
         language: "system" as Language,
-        theme: "system" as Theme,
+        theme: "light" as Theme,
         reverseProxy: false,
       },
       modelCache: null,
@@ -131,7 +131,7 @@ export const useSettingsStore = create<SettingsState>()(
           },
           system: {
             language: "system" as Language,
-            theme: "system" as Theme,
+            theme: "light" as Theme,
             reverseProxy: false,
           },
           modelCache: null,
@@ -164,8 +164,8 @@ export const useSettingsStore = create<SettingsState>()(
       },
     }),
     {
-      name: "open-builder-settings",
-      version: 6,
+      name: "yaada-builder-settings",
+      version: 7,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         ai: state.ai,
@@ -214,6 +214,13 @@ export const useSettingsStore = create<SettingsState>()(
           }
         }
         // version 6: added "builtin" to webSearch.engine — no data migration needed
+        if (version < 7) {
+          if (!state.system) state.system = {};
+          // Yaada Labs is light-first — treat unset/"system" as light
+          if (!state.system.theme || state.system.theme === "system") {
+            state.system.theme = "light";
+          }
+        }
         return state as any;
       },
     },

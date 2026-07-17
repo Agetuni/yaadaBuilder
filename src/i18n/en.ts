@@ -80,7 +80,7 @@ export const en: typeof zh = {
       system: "System",
       light: "Light",
       dark: "Dark",
-      hint: "Adjust the app's color scheme",
+      hint: "Light is the default. Dark is available as a fallback.",
     },
     reverseProxy: {
       label: "Reverse Proxy",

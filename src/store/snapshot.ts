@@ -6,7 +6,7 @@ import type { ProjectFiles, ProjectSnapshot } from "../types";
 
 // Separate localforage instance for snapshots
 const snapshotForage = localforage.createInstance({
-  name: "open-builder-snapshots",
+  name: "yaada-builder-snapshots",
 });
 
 const snapshotStorage = {
@@ -215,7 +215,7 @@ export const useSnapshotStore = create<SnapshotState>()(
       },
     }),
     {
-      name: "open-builder-snapshots",
+      name: "yaada-builder-snapshots",
       storage: createJSONStorage(() => snapshotStorage),
       partialize: (state) => ({
         snapshots: state.snapshots,

@@ -230,7 +230,6 @@ export function ChatInterface({
     <div className="relative flex flex-col h-full bg-background">
       <ChatHeader
         isGenerating={isGenerating}
-        onOpenSettings={onOpenSettings}
         onToggleSessionList={() => setShowSessionList(true)}
       />
 

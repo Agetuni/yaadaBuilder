@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your interest in Open Builder! We welcome all forms of contribution, including bug reports, feature suggestions, documentation improvements, and code submissions.
+Thank you for your interest in Yaada Builder! We welcome all forms of contribution, including bug reports, feature suggestions, documentation improvements, and code submissions.
 
 ---
 
@@ -30,7 +30,7 @@ By participating in this project, you agree to abide by the following guidelines
 
 ### Reporting Bugs
 
-1. Search [Issues](https://github.com/your-username/open-builder/issues) first to ensure the bug hasn't been reported
+1. Search [Issues](https://github.com/your-username/yaada-builder/issues) first to ensure the bug hasn't been reported
 2. Create a new Issue using the **Bug Report** template
 3. Provide the following information:
    - Operating system and browser version
@@ -64,8 +64,8 @@ By participating in this project, you agree to abide by the following guidelines
 
 ```bash
 # 1. Fork and clone the repository
-git clone https://github.com/your-username/open-builder.git
-cd open-builder
+git clone https://github.com/your-username/yaada-builder.git
+cd yaada-builder
 
 # 2. Install dependencies
 pnpm install

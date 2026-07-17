@@ -11,7 +11,7 @@
 import { createSseResponse } from "./sse-bridge";
 
 const PROXY_SCHEME = "proxy";
-const SETTINGS_STORAGE_KEY = "open-builder-settings";
+const SETTINGS_STORAGE_KEY = "yaada-builder-settings";
 
 // ─── State ───────────────────────────────────────────────────────────────────
 

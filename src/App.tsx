@@ -7,15 +7,22 @@ import {
 import { ChatInterface } from "./components/ChatInterface";
 import { CodeViewer } from "./components/CodeViewer";
 import { SettingsDialog } from "./components/SettingsDialog";
+import { LoginPage } from "./components/LoginPage";
 import { useAppState } from "./hooks/useAppState";
 import { useGenerator } from "./hooks/useGenerator";
 import { useIsMobile } from "./hooks/useIsMobile";
 import { useTheme } from "./hooks/useTheme";
 import { useConversationStore } from "./store/conversation";
+import { useAuthStore } from "./store/auth";
 import { useT } from "./i18n";
 
 export default function App() {
   const t = useT();
+  const cloudEnabled = useAuthStore((s) => s.cloudEnabled);
+  const authReady = useAuthStore((s) => s.ready);
+  const session = useAuthStore((s) => s.session);
+  const initAuth = useAuthStore((s) => s.init);
+
   const activeId = useConversationStore((s) => s.activeId);
   const hasHydrated = useConversationStore((s) => s._hasHydrated);
   const conversations = useConversationStore((s) => s.conversations);
@@ -24,8 +31,13 @@ export default function App() {
   const isMobile = useIsMobile();
   useTheme();
 
-  // On hydration: ensure there's an active conversation
   useEffect(() => {
+    void initAuth();
+  }, [initAuth]);
+
+  // On hydration: ensure there's an active conversation (skip until signed in when cloud)
+  useEffect(() => {
+    if (cloudEnabled && !session) return;
     if (!hasHydrated) return;
     if (!activeId || !conversations[activeId]) {
       const entries = Object.values(conversations);
@@ -36,7 +48,7 @@ export default function App() {
         createConversation();
       }
     }
-  }, [hasHydrated]);
+  }, [hasHydrated, cloudEnabled, session]);
 
   const {
     files,
@@ -92,9 +104,20 @@ export default function App() {
 
   // Reset ephemeral state on conversation switch
   useEffect(() => {
-    // setCurrentFile("src/App.tsx");
     restartSandpack();
   }, [activeId]);
+
+  if (!authReady) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">{t.app.loading}</p>
+      </div>
+    );
+  }
+
+  if (cloudEnabled && !session) {
+    return <LoginPage />;
+  }
 
   if (!hasHydrated) {
     return (

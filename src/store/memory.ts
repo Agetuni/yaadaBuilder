@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import localforage from "localforage";
+import { isCloudEnabled } from "../lib/supabase";
 import type { MemoryItem, MemoryOperation } from "../types";
 
 // Separate localforage instance for memories
 const memoryForage = localforage.createInstance({
-  name: "open-builder-memories",
+  name: "yaada-builder-memories",
 });
 
 const memoryStorage = {
@@ -158,12 +159,16 @@ export const useMemoryStore = create<MemoryState>()(
       },
     }),
     {
-      name: "open-builder-memories",
+      name: "yaada-builder-memories",
       storage: createJSONStorage(() => memoryStorage),
       partialize: (state) => ({
         memories: state.memories,
       }),
       onRehydrateStorage: () => () => {
+        if (isCloudEnabled()) {
+          useMemoryStore.setState({ memories: [], _hasHydrated: false });
+          return;
+        }
         useMemoryStore.setState({ _hasHydrated: true });
       },
     },

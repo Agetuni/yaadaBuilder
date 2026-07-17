@@ -1,4 +1,4 @@
-name: open-builder
+name: yaada-builder
 options:
   bundleIdPrefix: app.u14.builder
   deploymentTarget:
@@ -10,7 +10,7 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: open-builder
+      PRODUCT_NAME: Yaada Builder
       PRODUCT_BUNDLE_IDENTIFIER: app.u14.builder
 targetTemplates:
   app:

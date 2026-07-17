@@ -1,6 +1,6 @@
 <div align="center">
 
-# Open Builder
+# Yaada Builder
 
 **AI-Powered Web App Generator — Describe in natural language, instantly generate runnable projects**
 
@@ -21,7 +21,7 @@ English | [简体中文](README.zh-CN.md)
 
 ## Introduction
 
-Open Builder is an AI-driven web app generator that runs entirely in the browser. Simply describe the application you want to build in natural language, and the AI will automatically create, modify, and delete files in an in-memory file system through a Tool Call loop, with live preview powered by [Sandpack](https://sandpack.codesandbox.io/).
+Yaada Builder is an AI-driven web app generator that runs entirely in the browser. Simply describe the application you want to build in natural language, and the AI will automatically create, modify, and delete files in an in-memory file system through a Tool Call loop, with live preview powered by [Sandpack](https://sandpack.codesandbox.io/).
 
 No backend server required — all computation happens in the browser. Your API Key is stored only in local browser storage and is never uploaded to any server.
 
@@ -85,7 +85,7 @@ It also supports building as a desktop app (macOS / Windows / Linux) and mobile 
 ```bash
 # Clone the repository
 git clone https://github.com/Amery2010/open-builder.git
-cd open-builder
+cd yaada-builder
 
 # Install dependencies
 pnpm install
@@ -95,6 +95,14 @@ pnpm dev
 ```
 
 Open `http://localhost:5173` in your browser, click the settings icon in the top-right corner to configure your API Key.
+
+### Cloud mode (shared TinyHustle Supabase)
+
+When `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set (see `.env.example`), Yaada Builder requires sign-in. Users must be created in TinyHustle with **Yaada Builder access** enabled; AI settings are loaded from the user’s `builder_settings`. Conversations sync to Supabase so projects can be reopened and previewed from any device.
+
+1. Apply `TinyHustle/supabase/migrations/0003_open_builder.sql` on the shared project.
+2. Copy `.env.example` → `.env` and fill in the anon key (never the service role).
+3. In TinyHustle Admin → Users, enable Builder and set API settings for the caller.
 
 ### Desktop / Mobile App (Tauri)
 
@@ -182,7 +190,7 @@ Built-in tools:
 
 ## Supported Models
 
-Open Builder is compatible with the API formats of mainstream large language models:
+Yaada Builder is compatible with the API formats of mainstream large language models:
 
 | Provider  | Recommended Models                   | API URL                                                              |
 | --------- | ------------------------------------ | -------------------------------------------------------------------- |
@@ -232,7 +240,7 @@ Or manually: import the GitHub repo, select `Vite` as framework preset, build co
 Or manually:
 
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com/) → Workers & Pages → Create → Worker → Connect to Git
-2. Select the `open-builder` repo with the following build config:
+2. Select the `yaada-builder` repo with the following build config:
 
 | Option        | Value            |
 | ------------- | ---------------- |
@@ -254,4 +262,4 @@ Issues and Pull Requests are welcome! Please read the [Contributing Guide](CONTR
 
 ## License
 
-[GPLv3 License](LICENSE) © 2026 Open Builder Contributors
+[GPLv3 License](LICENSE) © 2026 Yaada Builder Contributors

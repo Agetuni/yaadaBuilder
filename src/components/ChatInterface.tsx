@@ -154,6 +154,7 @@ export function ChatInterface({
 
   const handleSlashCommand = useCallback(
     (cmd: string) => {
+      if (isGenerating && (cmd === "new" || cmd === "fork")) return;
       setInput("");
       switch (cmd) {
         case "new":
@@ -180,7 +181,7 @@ export function ChatInterface({
           break;
       }
     },
-    [onCompressContext, onReview, onRetry, onContinue, onSetFiles],
+    [isGenerating, onCompressContext, onReview, onRetry, onContinue, onSetFiles],
   );
 
   // Find the last assistant message ID for streaming indicator
@@ -252,6 +253,7 @@ export function ChatInterface({
             <SessionList
               onToggleSessionList={() => setShowSessionList(false)}
               onClose={() => setShowSessionList(false)}
+              isGenerating={isGenerating}
             />
           </div>
         </div>

@@ -129,6 +129,8 @@ export const en: typeof zh = {
   },
   sessions: {
     title: "Sessions",
+    new: "New session",
+    newDisabledWhileBuilding: "Finish building before starting a new session",
     pinned: "Pinned",
     normal: "Conversations",
     archived: "Archived",

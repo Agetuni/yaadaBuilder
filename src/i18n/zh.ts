@@ -111,6 +111,8 @@ export const zh = {
   },
   sessions: {
     title: "会话列表",
+    new: "新建会话",
+    newDisabledWhileBuilding: "请等待构建完成后再新建会话",
     pinned: "已置顶",
     normal: "会话",
     archived: "已归档",

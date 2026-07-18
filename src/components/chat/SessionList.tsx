@@ -35,11 +35,13 @@ import type { Conversation } from "../../types";
 interface SessionListProps {
   onToggleSessionList: () => void;
   onClose: () => void;
+  isGenerating?: boolean;
 }
 
 export function SessionList({
   onToggleSessionList,
   onClose,
+  isGenerating = false,
 }: SessionListProps) {
   const t = useT();
   const conversations = useConversationStore((s) => s.conversations);
@@ -89,6 +91,7 @@ export function SessionList({
   }, [editingId]);
 
   const handleNew = () => {
+    if (isGenerating) return;
     createConversation();
     onClose();
   };
@@ -310,6 +313,10 @@ export function SessionList({
           size="icon"
           className="h-8 w-8"
           onClick={handleNew}
+          disabled={isGenerating}
+          title={
+            isGenerating ? t.sessions.newDisabledWhileBuilding : t.sessions.new
+          }
         >
           <Plus size={18} />
         </Button>

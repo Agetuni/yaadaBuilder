@@ -30,6 +30,7 @@ interface AuthState {
 }
 
 let syncStop: (() => void) | null = null;
+let authListenerAttached = false;
 
 async function hydrateFromCloud(userId: string, profile: BuilderProfile) {
   const applied = applyBuilderSettings(profile.builder_settings);
@@ -119,25 +120,36 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         });
       }
     } else {
-      set({ ready: true, session: null, user: null, profile: null });
+      syncStop?.();
+      syncStop = null;
+      set({
+        ready: true,
+        session: null,
+        user: null,
+        profile: null,
+        settingsManagedByAdmin: false,
+      });
     }
 
-    supabase.auth.onAuthStateChange(async (event, nextSession) => {
-      if (event === "SIGNED_OUT") {
-        syncStop?.();
-        syncStop = null;
-        set({
-          session: null,
-          user: null,
-          profile: null,
-          settingsManagedByAdmin: false,
-        });
-        return;
-      }
-      if (event === "SIGNED_IN" && nextSession?.user && !get().profile) {
-        // signIn() handles hydration; ignore duplicate
-      }
-    });
+    if (!authListenerAttached) {
+      authListenerAttached = true;
+      supabase.auth.onAuthStateChange(async (event, nextSession) => {
+        if (event === "SIGNED_OUT") {
+          syncStop?.();
+          syncStop = null;
+          set({
+            session: null,
+            user: null,
+            profile: null,
+            settingsManagedByAdmin: false,
+          });
+          return;
+        }
+        if (event === "SIGNED_IN" && nextSession?.user && !get().profile) {
+          // signIn() handles hydration; ignore duplicate
+        }
+      });
+    }
   },
 
   signIn: async (email, password) => {
@@ -198,5 +210,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       settingsManagedByAdmin: false,
       error: null,
     });
+    // Hard navigation so browser Back cannot restore a cached logged-in UI
+    window.location.replace(
+      `${window.location.pathname}${window.location.search}` || "/",
+    );
   },
 }));

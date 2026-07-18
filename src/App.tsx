@@ -36,6 +36,15 @@ export default function App() {
     void initAuth();
   }, [initAuth]);
 
+  // Re-validate session when browser restores this page from bfcache
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) void useAuthStore.getState().init();
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   // Always open on a brand-new blank conversation (history stays in the sidebar)
   useEffect(() => {
     if (!authReady) return;

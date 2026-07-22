@@ -102,6 +102,9 @@ export function ChatInterface({
   const isMobile = useIsMobile();
 
   const activeId = useConversationStore((s) => s.activeId);
+  const conversationTitle = useConversationStore((s) =>
+    s.activeId ? (s.conversations[s.activeId]?.title ?? "") : "",
+  );
   const compressFromIndex = useConversationStore((s) =>
     s.activeId
       ? (s.conversations[s.activeId]?.compressedContext?.fromIndex ?? -1)
@@ -238,6 +241,12 @@ export function ChatInterface({
       <ChatHeader
         isGenerating={isGenerating}
         onToggleSessionList={() => setShowSessionList(true)}
+        showPublish={isMobile && isProjectInitialized}
+        conversationId={activeId}
+        title={conversationTitle}
+        template={template}
+        files={files}
+        isProjectInitialized={isProjectInitialized}
       />
 
       {/* Session list sidebar overlay */}

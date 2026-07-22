@@ -2,13 +2,30 @@ import { PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConversationStore, DEFAULT_TITLE } from "../../store/conversation";
 import { useT } from "../../i18n";
+import { PublishControl } from "../code-viewer/PublishControl";
+import { UserProfileMenu } from "../UserProfileMenu";
+import type { ProjectFiles } from "../../types";
 
 interface ChatHeaderProps {
   isGenerating: boolean;
   onToggleSessionList: () => void;
+  showPublish?: boolean;
+  conversationId?: string | null;
+  title?: string;
+  template?: string;
+  files?: ProjectFiles;
+  isProjectInitialized?: boolean;
 }
 
-export function ChatHeader({ onToggleSessionList }: ChatHeaderProps) {
+export function ChatHeader({
+  onToggleSessionList,
+  showPublish = false,
+  conversationId = null,
+  title: projectTitle = "",
+  template = "",
+  files = {},
+  isProjectInitialized = false,
+}: ChatHeaderProps) {
   const t = useT();
   const rawTitle = useConversationStore((s) =>
     s.activeId ? (s.conversations[s.activeId]?.title ?? null) : null,
@@ -40,7 +57,19 @@ export function ChatHeader({ onToggleSessionList }: ChatHeaderProps) {
       <span className="text-sm font-medium truncate px-2 flex-1 text-center">
         {title}
       </span>
-      <div className="w-8 shrink-0" aria-hidden />
+      <div className="flex items-center gap-1 shrink-0">
+        {showPublish && (
+          <PublishControl
+            conversationId={conversationId}
+            title={projectTitle}
+            template={template}
+            files={files}
+            isProjectInitialized={isProjectInitialized}
+            compact
+          />
+        )}
+        <UserProfileMenu />
+      </div>
     </div>
   );
 }

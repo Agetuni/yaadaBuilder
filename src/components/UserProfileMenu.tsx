@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +12,13 @@ import {
 import { useAuthStore } from "../store/auth";
 import { useT } from "../i18n";
 
+interface UserProfileMenuProps {
+  /** Optional custom trigger; defaults to icon-only profile button. */
+  trigger?: ReactNode;
+}
+
 /** User avatar button with profile menu (sign out). Hidden when not signed in. */
-export function UserProfileMenu() {
+export function UserProfileMenu({ trigger }: UserProfileMenuProps = {}) {
   const t = useT();
   const cloudEnabled = useAuthStore((s) => s.cloudEnabled);
   const user = useAuthStore((s) => s.user);
@@ -23,14 +29,17 @@ export function UserProfileMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          title={t.header.profile}
-          className="h-8 w-8 shrink-0"
-        >
-          <User size={18} />
-        </Button>
+        {trigger ?? (
+          <Button
+            variant="ghost"
+            size="icon"
+            title={t.header.profile}
+            aria-label={t.header.profile}
+            className="h-8 w-8 shrink-0"
+          >
+            <User size={18} />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="font-normal">

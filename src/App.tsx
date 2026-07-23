@@ -139,97 +139,111 @@ export default function App() {
     );
   }
 
+  const chat = (
+    <ChatInterface
+      messages={messages}
+      isGenerating={isGenerating}
+      hasValidSettings={hasValidSettings}
+      onGenerate={generate}
+      onStop={stop}
+      onOpenSettings={() => setIsSettingsOpen(true)}
+      onSetFiles={(f) => setFiles(f)}
+      files={files}
+      template={template}
+      sandpackKey={sandpackKey}
+      isProjectInitialized={isProjectInitialized}
+      onCompressContext={compressContext}
+      onRetry={retry}
+      onContinue={continueTask}
+      onReview={review}
+    />
+  );
+
+  const settingsDialog = (
+    <SettingsDialog
+      isOpen={isSettingsOpen}
+      onClose={() => setIsSettingsOpen(false)}
+      settings={settings}
+      onSave={handleSaveSettings}
+      webSearchSettings={webSearchSettings}
+      onSaveWebSearch={handleSaveWebSearchSettings}
+      assetSearchSettings={assetSearchSettings}
+      onSaveAssetSearch={handleSaveAssetSearchSettings}
+      systemSettings={systemSettings}
+      onSaveSystem={handleSaveSystemSettings}
+    />
+  );
+
+  // Mobile: skip resizable panels so the chat header never gets clipped.
+  if (isMobile) {
+    return (
+      <div className="flex h-full w-full min-h-0 flex-col overflow-hidden bg-background">
+        {chat}
+        {settingsDialog}
+      </div>
+    );
+  }
+
   return (
     <ResizablePanelGroup className="flex h-full w-full bg-background">
       <ResizablePanel
         className="h-full w-full md:w-100 md:flex-1 shrink-0 overflow-hidden"
         defaultSize="30%"
         minSize={360}
-        maxSize={isMobile ? "100%" : "50%"}
+        maxSize="50%"
       >
-        <ChatInterface
-          messages={messages}
-          isGenerating={isGenerating}
-          hasValidSettings={hasValidSettings}
-          onGenerate={generate}
-          onStop={stop}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onSetFiles={(f) => setFiles(f)}
-          files={files}
-          template={template}
-          sandpackKey={sandpackKey}
-          isProjectInitialized={isProjectInitialized}
-          onCompressContext={compressContext}
-          onRetry={retry}
-          onContinue={continueTask}
-          onReview={review}
-        />
+        {chat}
       </ResizablePanel>
 
-      {!isMobile ? (
-        <>
-          <ResizableHandle className="hidden md:flex" />
+      <ResizableHandle className="hidden md:flex" />
 
-          <ResizablePanel className="w-full h-full min-w-0 hidden md:flex overflow-hidden">
-            {isProjectInitialized && !isMobile ? (
-              <CodeViewer
-                files={files}
-                currentFile={currentFile}
-                onFileSelect={setCurrentFile}
-                onFileChange={updateFiles}
-                onRenameFile={renameFile}
-                onDeleteFile={deleteFile}
-                onMoveFile={moveFile}
-                template={template}
-                sandpackKey={sandpackKey}
-                conversationId={activeId}
-                title={
-                  activeId && conversations[activeId]
-                    ? conversations[activeId].title
-                    : ""
-                }
-                isProjectInitialized={isProjectInitialized}
-              />
-            ) : (
-              <div className="flex w-full h-full min-w-0 flex-col bg-muted/30">
-                <div className="h-14 px-3 border-b bg-background flex items-center justify-end shrink-0">
-                  <UserProfileMenu />
+      <ResizablePanel className="w-full h-full min-w-0 hidden md:flex overflow-hidden">
+        {isProjectInitialized ? (
+          <CodeViewer
+            files={files}
+            currentFile={currentFile}
+            onFileSelect={setCurrentFile}
+            onFileChange={updateFiles}
+            onRenameFile={renameFile}
+            onDeleteFile={deleteFile}
+            onMoveFile={moveFile}
+            template={template}
+            sandpackKey={sandpackKey}
+            conversationId={activeId}
+            title={
+              activeId && conversations[activeId]
+                ? conversations[activeId].title
+                : ""
+            }
+            isProjectInitialized={isProjectInitialized}
+          />
+        ) : (
+          <div className="flex w-full h-full min-w-0 flex-col bg-muted/30">
+            <div className="h-14 px-3 border-b bg-background flex items-center justify-end shrink-0">
+              <UserProfileMenu />
+            </div>
+            <div className="flex flex-1 items-center justify-center">
+              <div className="text-center max-w-md px-6">
+                <div className="mb-6 flex justify-center">
+                  <img
+                    className="h-16 w-16 rounded-2xl"
+                    src="/logo.png"
+                    alt="Yaada Builder"
+                  />
                 </div>
-                <div className="flex flex-1 items-center justify-center">
-                  <div className="text-center max-w-md px-6">
-                    <div className="mb-6 flex justify-center">
-                      <img
-                        className="h-16 w-16 rounded-2xl"
-                        src="/logo.png"
-                        alt="Yaada Builder"
-                      />
-                    </div>
-                    <h2 className="text-xl font-semibold text-foreground mb-2">
-                      {t.app.startBuilding}
-                    </h2>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {t.app.startBuildingDesc}
-                    </p>
-                  </div>
-                </div>
+                <h2 className="text-xl font-semibold text-foreground mb-2">
+                  {t.app.startBuilding}
+                </h2>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {t.app.startBuildingDesc}
+                </p>
               </div>
-            )}
-          </ResizablePanel>
-        </>
-      ) : null}
+            </div>
+          </div>
+        )}
+      </ResizablePanel>
 
-      <SettingsDialog
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        settings={settings}
-        onSave={handleSaveSettings}
-        webSearchSettings={webSearchSettings}
-        onSaveWebSearch={handleSaveWebSearchSettings}
-        assetSearchSettings={assetSearchSettings}
-        onSaveAssetSearch={handleSaveAssetSearchSettings}
-        systemSettings={systemSettings}
-        onSaveSystem={handleSaveSystemSettings}
-      />
+      {settingsDialog}
     </ResizablePanelGroup>
   );
 }

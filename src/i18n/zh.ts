@@ -98,10 +98,10 @@ export const zh = {
     newApp: "新应用",
   },
   header: {
-    sessions: "会话列表",
+    sessions: "历史",
     openSource: "开源代码",
     settings: "设置",
-    profile: "个人资料",
+    profile: "账户",
     signOut: "退出登录",
   },
   warning: {
@@ -110,7 +110,7 @@ export const zh = {
     openSettings: "打开设置",
   },
   sessions: {
-    title: "会话列表",
+    title: "历史",
     new: "新建会话",
     newDisabledWhileBuilding: "请等待构建完成后再新建会话",
     pinned: "已置顶",

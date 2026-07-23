@@ -237,7 +237,7 @@ export function ChatInterface({
   };
 
   return (
-    <div className="relative flex flex-col h-full bg-background">
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-background">
       <ChatHeader
         isGenerating={isGenerating}
         onToggleSessionList={() => setShowSessionList(true)}
@@ -269,7 +269,7 @@ export function ChatInterface({
       )}
 
       <div
-        className="flex flex-col flex-1 p-4 pb-0 overflow-y-auto space-y-4"
+        className="flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto overscroll-contain p-3 pb-2 sm:p-4 sm:pb-0"
         style={{ scrollbarGutter: "stable" }}
       >
         {!hasValidSettings && (
@@ -362,18 +362,20 @@ export function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      <ChatInput
-        input={input}
-        onChange={setInput}
-        onSubmit={handleSubmit}
-        onStop={onStop}
-        isGenerating={isGenerating}
-        messages={messages}
-        attachments={attachments}
-        onAttachmentsChange={setAttachments}
-        onSlashCommand={handleSlashCommand}
-        focusKey={suggestionFocusKey}
-      />
+      <div className="z-30 shrink-0 border-t border-border bg-background pb-[env(safe-area-inset-bottom)]">
+        <ChatInput
+          input={input}
+          onChange={setInput}
+          onSubmit={handleSubmit}
+          onStop={onStop}
+          isGenerating={isGenerating}
+          messages={messages}
+          attachments={attachments}
+          onAttachmentsChange={setAttachments}
+          onSlashCommand={handleSlashCommand}
+          focusKey={suggestionFocusKey}
+        />
+      </div>
 
       {/* Diff modal */}
       {diffMessageId && activeId && (

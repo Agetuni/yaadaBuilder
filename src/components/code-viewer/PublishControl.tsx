@@ -193,7 +193,7 @@ export function PublishControl({
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="max-h-[min(90dvh,40rem)] overflow-y-auto sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               {slug ? t.toolbar.updateTitle : t.toolbar.publishTitle}

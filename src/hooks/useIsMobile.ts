@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-export function useIsMobile(breakpoint = 768): boolean {
+/** Treat phones + small tablets (incl. A11 landscape ~780px) as mobile chrome. */
+export function useIsMobile(breakpoint = 1024): boolean {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < breakpoint,
   );

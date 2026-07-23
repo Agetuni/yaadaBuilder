@@ -114,14 +114,18 @@ export function CodeViewer({
               )}
               style={
                 deviceSize === "tablet"
-                  ? { width: 768, height: 1024, maxHeight: "calc(100% - 2rem)" }
+                  ? {
+                      width: "min(768px, 100%)",
+                      height: "min(1024px, calc(100% - 2rem))",
+                      maxWidth: "100%",
+                    }
                   : deviceSize === "mobile"
                     ? {
-                        width: 375,
-                        height: 667,
-                        maxHeight: "calc(100% - 2rem)",
+                        width: "min(375px, 100%)",
+                        height: "min(667px, calc(100% - 2rem))",
+                        maxWidth: "100%",
                       }
-                    : { height: "100%" }
+                    : { height: "100%", width: "100%" }
               }
             >
               <div className="grid grid-rows-3 h-full">

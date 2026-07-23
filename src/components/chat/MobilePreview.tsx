@@ -23,20 +23,30 @@ export function MobilePreview({
   );
 
   return (
-    <div className="editor border rounded-lg min-h-160 overflow-hidden bg-background">
-      <SandpackProvider
-        key={sandpackKey}
-        template={template as SandpackPredefinedTemplate}
-        theme={isDark ? "dark" : "light"}
-        files={sandpackFiles}
+    <div className="editor w-full max-w-full shrink-0 overflow-hidden rounded-xl border border-border bg-background">
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          // Fit small phones/tablets (e.g. Galaxy A11) without shoving the prompt off-screen
+          height: "min(52dvh, 420px)",
+          minHeight: 220,
+        }}
       >
-        <SandpackPreview
-          showNavigator
-          showOpenInCodeSandbox={false}
-          showRefreshButton
-          style={{ height: 640 }}
-        />
-      </SandpackProvider>
+        <SandpackProvider
+          key={sandpackKey}
+          template={template as SandpackPredefinedTemplate}
+          theme={isDark ? "dark" : "light"}
+          files={sandpackFiles}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <SandpackPreview
+            showNavigator
+            showOpenInCodeSandbox={false}
+            showRefreshButton
+            style={{ height: "100%", width: "100%" }}
+          />
+        </SandpackProvider>
+      </div>
     </div>
   );
 }

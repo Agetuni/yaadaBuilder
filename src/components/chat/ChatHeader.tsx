@@ -1,6 +1,7 @@
-import { PanelLeftOpen } from "lucide-react";
+import { History, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConversationStore, DEFAULT_TITLE } from "../../store/conversation";
+import { useAuthStore } from "../../store/auth";
 import { useT } from "../../i18n";
 import { PublishControl } from "../code-viewer/PublishControl";
 import { UserProfileMenu } from "../UserProfileMenu";
@@ -27,37 +28,45 @@ export function ChatHeader({
   isProjectInitialized = false,
 }: ChatHeaderProps) {
   const t = useT();
+  const cloudEnabled = useAuthStore((s) => s.cloudEnabled);
+  const user = useAuthStore((s) => s.user);
   const rawTitle = useConversationStore((s) =>
     s.activeId ? (s.conversations[s.activeId]?.title ?? null) : null,
   );
   const title =
     !rawTitle || rawTitle === DEFAULT_TITLE ? t.chat.newApp : rawTitle;
+  const showAccount = cloudEnabled && !!user;
 
   return (
-    <div className="h-14 px-3 border-b bg-background flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-2 min-w-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onToggleSessionList}
-          title={t.header.sessions}
-          className="h-8 w-8 shrink-0"
-        >
-          <PanelLeftOpen size={18} />
-        </Button>
+    <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center justify-between gap-1.5 border-b border-border bg-background/95 px-2 backdrop-blur-sm sm:gap-2 sm:px-3">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onToggleSessionList}
+        title={t.header.sessions}
+        aria-label={t.header.sessions}
+        className="h-9 shrink-0 gap-1.5 px-2 sm:px-2.5"
+      >
+        <History size={16} />
+        <span className="text-sm font-medium">{t.header.sessions}</span>
+      </Button>
+
+      <div className="hidden min-w-0 flex-1 items-center justify-center gap-2 md:flex">
         <img
-          className="h-7 w-7 rounded-md shrink-0"
+          className="h-7 w-7 shrink-0 rounded-md"
           src="/logo.png"
           alt=""
         />
-        <span className="font-display text-sm font-semibold tracking-tight truncate">
+        <span className="font-display truncate text-sm font-semibold tracking-tight">
           Yaada <span className="text-primary">Builder</span>
         </span>
+        <span className="truncate px-2 text-sm font-medium text-muted-foreground">
+          {title}
+        </span>
       </div>
-      <span className="text-sm font-medium truncate px-2 flex-1 text-center">
-        {title}
-      </span>
-      <div className="flex items-center gap-1 shrink-0">
+
+      <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
         {showPublish && (
           <PublishControl
             conversationId={conversationId}
@@ -68,8 +77,24 @@ export function ChatHeader({
             compact
           />
         )}
-        <UserProfileMenu />
+        {showAccount ? (
+          <UserProfileMenu
+            trigger={
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                title={t.header.profile}
+                aria-label={t.header.profile}
+                className="h-9 shrink-0 gap-1.5 px-2 sm:px-2.5"
+              >
+                <User size={16} />
+                <span className="text-sm font-medium">{t.header.profile}</span>
+              </Button>
+            }
+          />
+        ) : null}
       </div>
-    </div>
+    </header>
   );
 }

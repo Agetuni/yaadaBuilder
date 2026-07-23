@@ -116,10 +116,10 @@ export const en: typeof zh = {
     newApp: "New App",
   },
   header: {
-    sessions: "Sessions",
+    sessions: "History",
     openSource: "Source Code",
     settings: "Settings",
-    profile: "Profile",
+    profile: "Account",
     signOut: "Sign out",
   },
   warning: {
@@ -128,7 +128,7 @@ export const en: typeof zh = {
     openSettings: "Open Settings",
   },
   sessions: {
-    title: "Sessions",
+    title: "History",
     new: "New session",
     newDisabledWhileBuilding: "Finish building before starting a new session",
     pinned: "Pinned",
